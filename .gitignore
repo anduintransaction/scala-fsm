@@ -1,0 +1,59 @@
+# gradle
+*~
+target
+target-intellij
+*.iml
+/*.ipr
+/*.iws
+*.classpath
+*.project
+*.settings
+.idea
+
+*.sublime-*
+.nb-gradle
+
+# Worksheets (Eclipse or IntelliJ)
+*.sc
+
+# Eclipse
+.cache
+.classpath
+.project
+.scala_dependencies
+.settings
+.target/
+.worksheet/
+
+# IntelliJ
+.idea/
+
+# ENSIME
+.ensime
+.ensime_cache/
+.ensime_lucene/
+
+# Mac
+.DS_Store
+
+# node_modules
+/.history
+/tools/
+/node_modules/
+
+# go.cd
+cruise-output/
+
+# sass
+.sass-cache/
+
+.js/
+.jvm/
+
+/.bundle/
+
+/webTarget/
+
+# vs code
+ensime-langserver.log
+pc.stdout.log
