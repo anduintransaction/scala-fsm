@@ -22,10 +22,10 @@ See the unit tests for more example usages. Here is an example:
 
 * Define your transitions
 ```
-    implicit val tAB = Transformation[A, Iab, B]( (a, e) => B(a.id + e.id))
-    implicit val tAC = Transformation[A, Iac, C]( (a, e) => C(a.id + e.id))
-    implicit val tBC = Transformation[B, Ibc, C]( (b, e) => C(b.id + e.id))
-    implicit def tCC[E <: Input] = Transformation[C, E, C]( (c, e) => C(c.id + "i"))
+    implicit val tAB = Transformation[A, Iab, B]((a, e) => B(a.id + e.id)
+    implicit val tAC = Transformation[A, Iac, C]((a, e) => C(a.id + e.id))
+    implicit val tBC = Transformation[B, Ibc, C]((b, e) => C(b.id + e.id))
+    implicit def tCC[E <: Input] = Transformation[C, E, C]((c, e) => C(c.id + "i"))
 ```
 
 * Then you can transition between stages:
