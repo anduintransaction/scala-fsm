@@ -34,14 +34,18 @@ final class FsmSpecs extends FreeSpec with Matchers with OptionValues with Insid
     case object NotEnoughBuffer extends Input
     case object EnoughBuffer extends Input
 
+    def transformation[S1 <: State, I <: Input, S2 <: State](s2: S2): Transformation[S1, I, S2] = {
+      Transformation[S1, I, S2]((_, _) => s2)
+    }
+
     // Transformations
-    implicit val tInitialPlaying = Transformation[Initial.type, StartPlayback.type, Playing.type]((_, _) => Playing)
-    implicit val tPlayingPaused = Transformation[Playing.type, PausePlayback.type, Paused.type]((_, _) => Paused)
-    implicit val tPausedPlaying = Transformation[Paused.type, UnPausePlayback.type, Playing.type]((_, _) => Playing)
-    implicit val tPlayingBuffering = Transformation[Playing.type, NotEnoughBuffer.type, Buffering.type]((_, _) => Buffering)
-    implicit val tBufferingPlaying = Transformation[Buffering.type, EnoughBuffer.type, Playing.type]((_, _) => Playing)
-    implicit val tPlayingStopped = Transformation[Playing.type, StopPlayback.type, Stopped.type]((_, _) => Stopped)
-    implicit val tPausedStopped = Transformation[Paused.type, StopPlayback.type, Stopped.type]((_, _) => Stopped)
+    implicit val tInitialPlaying = transformation[Initial.type, StartPlayback.type, Playing.type](Playing)
+    implicit val tPlayingPaused = transformation[Playing.type, PausePlayback.type, Paused.type](Paused)
+    implicit val tPausedPlaying = transformation[Paused.type, UnPausePlayback.type, Playing.type](Playing)
+    implicit val tPlayingBuffering = transformation[Playing.type, NotEnoughBuffer.type, Buffering.type](Buffering)
+    implicit val tBufferingPlaying = transformation[Buffering.type, EnoughBuffer.type, Playing.type](Playing)
+    implicit val tPlayingStopped = transformation[Playing.type, StopPlayback.type, Stopped.type](Stopped)
+    implicit val tPausedStopped = transformation[Paused.type, StopPlayback.type, Stopped.type](Stopped)
 
     "Verify state transitions" in {
       Fsm(Initial).transition(StartPlayback) shouldBe Fsm(Playing)
@@ -55,8 +59,8 @@ final class FsmSpecs extends FreeSpec with Matchers with OptionValues with Insid
 
       Fsm(Buffering).transition(EnoughBuffer) shouldBe Fsm(Playing)
 
-      // This won't compile
-      //Fsm(Initial).transition(StopPlayback)
+      // Invalid transition won't compile
+      // Fsm(Initial).transition(StopPlayback)
     }
   }
 
@@ -84,10 +88,10 @@ final class FsmSpecs extends FreeSpec with Matchers with OptionValues with Insid
     case class Ibc(id: String) extends Input
 
     // Transformations
-    implicit val tAB = Transformation[A, Iab, B]( (a, e) => B(a.id + e.id))
-    implicit val tAC = Transformation[A, Iac, C]( (a, e) => C(a.id + e.id))
-    implicit val tBC = Transformation[B, Ibc, C]( (b, e) => C(b.id + e.id))
-    implicit def tCC[E <: Input] = Transformation[C, E, C]( (c, e) => C(c.id + "i"))
+    implicit val tAB = Transformation[A, Iab, B]((a, e) => B(a.id + e.id))
+    implicit val tAC = Transformation[A, Iac, C]((a, e) => C(a.id + e.id))
+    implicit val tBC = Transformation[B, Ibc, C]((b, e) => C(b.id + e.id))
+    implicit def tCC[E <: Input] = Transformation[C, E, C]((c, e) => C(c.id + "i"))
 
     "Verify state transitions" in {
       Fsm(A("a")).transition(Iab("b")) shouldBe Fsm(B("ab"))
@@ -97,9 +101,8 @@ final class FsmSpecs extends FreeSpec with Matchers with OptionValues with Insid
       Fsm(C("c")).transition(Iab("")) shouldBe Fsm(C("ci"))
       Fsm(C("c")).transition(Iab("")).transition(Iac("")).transition(Ibc("")) shouldBe Fsm(C("ciii"))
 
-      // This won't compile
-      //Fsm(A("a")).transition(Ibc(""))
+      // Invalid transition won't compile
+      // Fsm(A("a")).transition(Ibc(""))
     }
   }
 }
-

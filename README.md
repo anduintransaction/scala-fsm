@@ -1,6 +1,6 @@
 # scala-fsm
 
-Finite state machine (FSM) implemented in scala. State transitions are being checked in compile-time, which means that invalid transitions will not compile.
+Finite state machine (FSM) implemented in Scala. State transitions are being checked in compile-time, which means that invalid transitions will not compile.
 
 ## Usage
 
@@ -37,6 +37,6 @@ See the unit tests for more example usages. Here is an example:
     Fsm(C("c")).transition(Iab("")) shouldBe Fsm(C("ci"))
     Fsm(C("c")).transition(Iab("")).transition(Iac("")).transition(Ibc("")) shouldBe Fsm(C("ciii"))
 
-    // This won't compile
-    //Fsm(A("a")).transition(Ibc(""))
+    // Invalid transition won't compile
+    // Fsm(A("a")).transition(Ibc(""))
 ```

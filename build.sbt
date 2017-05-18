@@ -1,13 +1,12 @@
 import sbt.Keys._
-import sbt.Project.projectToRef
 
-// a special crossProject for configuring a JS/JVM/shared structure
-lazy val shared = (crossProject.crossType(CrossType.Pure) in file("shared"))
+lazy val `scala-fsm` = crossProject
+  .crossType(CrossType.Pure)
+  .in(file("shared"))
   .settings(
-    scalaVersion := Settings.versions.scala,
+    scalaVersion := Settings.Versions.scala,
     libraryDependencies ++= Settings.sharedDependencies.value
   )
 
-lazy val sharedJVM = shared.jvm.settings(name := "sharedJVM")
-
-lazy val sharedJS = shared.js.settings(name := "sharedJS")
+lazy val `scala-fsm-jvm` = `scala-fsm`.jvm
+lazy val `scala-fsm-js` = `scala-fsm`.js
