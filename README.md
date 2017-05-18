@@ -40,3 +40,6 @@ See the unit tests for more example usages. Here is an example:
     // Invalid transition won't compile
     // Fsm(A("a")).transition(Ibc(""))
 ```
+
+## License
+Code released under the [Apache License 2.0](https://github.com/anduintransaction/scala-fsm/blob/master/LICENSE).   
